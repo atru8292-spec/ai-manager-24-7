@@ -1,0 +1,3379 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ИИ-Менеджер по недвижимости в Telegram</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      :root {
+        --bg: #0a0a0f;
+        --blue: #4f8ef7;
+        --blue-glow: rgba(79, 142, 247, 0.3);
+        --purple: #7c3aed;
+        --cyan: #06b6d4;
+        --green: #10b981;
+        --gold: #f59e0b;
+        --red: #ef4444;
+        --text: #f1f5f9;
+        --text-muted: #94a3b8;
+        --card-bg: rgba(255, 255, 255, 0.03);
+        --card-border: rgba(255, 255, 255, 0.08);
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+        overflow-x: hidden;
+      }
+
+      #particles {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      section {
+        position: relative;
+        z-index: 1;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 40px;
+      }
+
+      /* NAV */
+      nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+        padding: 20px 40px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        backdrop-filter: blur(20px);
+        background: rgba(10, 10, 15, 0.85);
+        border-bottom: 1px solid var(--card-border);
+        transition: box-shadow 0.3s ease;
+      }
+
+      .nav-logo {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 18px;
+        font-weight: 700;
+        background: linear-gradient(135deg, var(--blue), var(--purple));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .nav-logo svg {
+        width: 24px;
+        height: 24px;
+        flex-shrink: 0;
+      }
+
+      .nav-btn {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 24px;
+        background: linear-gradient(135deg, var(--blue), var(--purple));
+        border: none;
+        border-radius: 50px;
+        color: white;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        box-shadow: 0 0 20px var(--blue-glow);
+      }
+
+      .nav-btn svg {
+        width: 16px;
+        height: 16px;
+      }
+      .nav-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 0 40px var(--blue-glow);
+      }
+
+      /* HERO */
+      .hero {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        padding: 120px 40px 80px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .hero-bg {
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(
+            ellipse 80% 60% at 50% 0%,
+            rgba(79, 142, 247, 0.15) 0%,
+            transparent 60%
+          ),
+          radial-gradient(
+            ellipse 60% 40% at 80% 50%,
+            rgba(124, 58, 237, 0.1) 0%,
+            transparent 60%
+          );
+      }
+
+      .hero-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 80px;
+        align-items: center;
+        max-width: 1200px;
+        margin: 0 auto;
+        width: 100%;
+      }
+
+      .hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 16px;
+        background: rgba(79, 142, 247, 0.1);
+        border: 1px solid rgba(79, 142, 247, 0.3);
+        border-radius: 50px;
+        font-size: 13px;
+        color: var(--blue);
+        margin-bottom: 24px;
+        animation: fadeInUp 0.6s ease forwards;
+      }
+
+      .badge-dot {
+        width: 6px;
+        height: 6px;
+        background: var(--blue);
+        border-radius: 50%;
+        animation: pulse 2s infinite;
+      }
+
+      .hero-title {
+        font-size: clamp(36px, 4.5vw, 60px);
+        font-weight: 800;
+        line-height: 1.1;
+        margin-bottom: 24px;
+        animation: fadeInUp 0.6s ease 0.1s forwards;
+        opacity: 0;
+      }
+
+      .hero-title .accent {
+        background: linear-gradient(135deg, var(--blue), var(--cyan));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .hero-subtitle {
+        font-size: 18px;
+        color: var(--text-muted);
+        line-height: 1.6;
+        margin-bottom: 40px;
+        animation: fadeInUp 0.6s ease 0.2s forwards;
+        opacity: 0;
+      }
+
+      .hero-btns {
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+        animation: fadeInUp 0.6s ease 0.3s forwards;
+        opacity: 0;
+      }
+
+      .btn-primary {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 16px 32px;
+        background: linear-gradient(135deg, var(--blue), var(--purple));
+        border: none;
+        border-radius: 50px;
+        color: white;
+        font-size: 16px;
+        font-weight: 700;
+        cursor: pointer;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        box-shadow: 0 0 30px var(--blue-glow);
+      }
+
+      .btn-primary svg {
+        width: 18px;
+        height: 18px;
+      }
+      .btn-primary:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 0 60px var(--blue-glow);
+      }
+
+      .btn-secondary {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 16px 32px;
+        background: transparent;
+        border: 1px solid var(--card-border);
+        border-radius: 50px;
+        color: var(--text-muted);
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        text-decoration: none;
+        transition: all 0.3s ease;
+      }
+
+      .btn-secondary svg {
+        width: 18px;
+        height: 18px;
+      }
+      .btn-secondary:hover {
+        border-color: var(--blue);
+        color: var(--blue);
+        transform: translateY(-3px);
+      }
+
+      /* ТЕЛЕФОН */
+      .hero-visual {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        animation: fadeInRight 0.8s ease 0.4s forwards;
+        opacity: 0;
+      }
+
+      .phone-mockup {
+        width: 280px;
+        height: 560px;
+        background: linear-gradient(145deg, #1a1a2e, #16213e);
+        border-radius: 40px;
+        border: 2px solid rgba(79, 142, 247, 0.3);
+        padding: 20px;
+        position: relative;
+        box-shadow: 0 0 60px rgba(79, 142, 247, 0.2),
+          0 0 120px rgba(79, 142, 247, 0.1),
+          inset 0 0 60px rgba(79, 142, 247, 0.05);
+        animation: float 4s ease-in-out infinite;
+        overflow: hidden;
+      }
+
+      .phone-notch {
+        width: 80px;
+        height: 6px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 3px;
+        margin: 0 auto 20px;
+        flex-shrink: 0;
+      }
+
+      .phone-chat {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        overflow-y: auto;
+        max-height: 460px;
+        scrollbar-width: none;
+      }
+
+      .phone-chat::-webkit-scrollbar {
+        display: none;
+      }
+
+      .chat-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        margin-bottom: 8px;
+        position: sticky;
+        top: 0;
+        background: linear-gradient(145deg, #1a1a2e, #16213e);
+        z-index: 1;
+        flex-shrink: 0;
+      }
+
+      .chat-avatar {
+        width: 36px;
+        height: 36px;
+        background: linear-gradient(135deg, var(--blue), var(--purple));
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+
+      .chat-avatar svg {
+        width: 18px;
+        height: 18px;
+      }
+      .chat-name {
+        font-size: 13px;
+        font-weight: 600;
+      }
+      .chat-status {
+        font-size: 11px;
+        color: var(--green);
+      }
+
+      .msg {
+        max-width: 85%;
+        padding: 10px 14px;
+        border-radius: 16px;
+        font-size: 12px;
+        line-height: 1.5;
+        opacity: 0;
+        display: none;
+        flex-shrink: 0;
+      }
+
+      .msg-in {
+        background: rgba(79, 142, 247, 0.15);
+        border: 1px solid rgba(79, 142, 247, 0.2);
+        align-self: flex-start;
+        border-bottom-left-radius: 4px;
+      }
+
+      .msg-out {
+        background: linear-gradient(135deg, var(--blue), var(--purple));
+        align-self: flex-end;
+        border-bottom-right-radius: 4px;
+      }
+
+      .msg-time {
+        font-size: 10px;
+        color: rgba(255, 255, 255, 0.4);
+        text-align: right;
+        margin-top: 4px;
+      }
+
+      .typing-indicator {
+        display: none;
+        gap: 4px;
+        align-items: center;
+        padding: 10px 14px;
+        background: rgba(79, 142, 247, 0.1);
+        border-radius: 16px;
+        border-bottom-left-radius: 4px;
+        width: fit-content;
+        opacity: 0;
+        flex-shrink: 0;
+      }
+
+      .typing-dot {
+        width: 6px;
+        height: 6px;
+        background: var(--blue);
+        border-radius: 50%;
+        animation: typingDot 1.4s infinite;
+      }
+
+      .typing-dot:nth-child(2) {
+        animation-delay: 0.2s;
+      }
+      .typing-dot:nth-child(3) {
+        animation-delay: 0.4s;
+      }
+
+      /* СТАТЫ */
+      .stats {
+        padding: 60px 0;
+        border-top: 1px solid var(--card-border);
+        border-bottom: 1px solid var(--card-border);
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 40px;
+        text-align: center;
+      }
+
+      .stat-item {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: all 0.6s ease;
+      }
+
+      .stat-item.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .stat-icon {
+        width: 48px;
+        height: 48px;
+        margin: 0 auto 16px;
+        background: rgba(79, 142, 247, 0.1);
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .stat-icon svg {
+        width: 24px;
+        height: 24px;
+      }
+
+      .stat-num {
+        font-size: 48px;
+        font-weight: 800;
+        background: linear-gradient(135deg, var(--blue), var(--cyan));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        line-height: 1;
+        margin-bottom: 8px;
+      }
+
+      .stat-label {
+        font-size: 14px;
+        color: var(--text-muted);
+      }
+
+      /* СЕКЦИИ */
+      .section-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 14px;
+        border-radius: 50px;
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        margin-bottom: 20px;
+      }
+
+      .section-tag svg {
+        width: 14px;
+        height: 14px;
+      }
+      .tag-red {
+        background: rgba(239, 68, 68, 0.1);
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        color: var(--red);
+      }
+      .tag-blue {
+        background: rgba(79, 142, 247, 0.1);
+        border: 1px solid rgba(79, 142, 247, 0.3);
+        color: var(--blue);
+      }
+      .tag-green {
+        background: rgba(16, 185, 129, 0.1);
+        border: 1px solid rgba(16, 185, 129, 0.3);
+        color: var(--green);
+      }
+      .tag-gold {
+        background: rgba(245, 158, 11, 0.1);
+        border: 1px solid rgba(245, 158, 11, 0.3);
+        color: var(--gold);
+      }
+
+      .section-title {
+        font-size: clamp(32px, 4vw, 48px);
+        font-weight: 800;
+        line-height: 1.2;
+        margin-bottom: 16px;
+      }
+
+      .section-sub {
+        font-size: 18px;
+        color: var(--text-muted);
+        line-height: 1.6;
+        max-width: 600px;
+        margin-bottom: 60px;
+      }
+
+      /* ПРОБЛЕМЫ */
+      .problems {
+        padding: 120px 0;
+      }
+
+      .problems-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+      }
+
+      .problem-card {
+        padding: 32px;
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: 20px;
+        position: relative;
+        overflow: hidden;
+        opacity: 0;
+        transform: translateY(40px);
+        transition: all 0.6s ease;
+      }
+
+      .problem-card.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .problem-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: linear-gradient(90deg, var(--red), transparent);
+      }
+
+      .problem-card:hover {
+        border-color: rgba(239, 68, 68, 0.3);
+        transform: translateY(-4px);
+        box-shadow: 0 20px 60px rgba(239, 68, 68, 0.1);
+      }
+
+      .problem-icon-wrap {
+        width: 56px;
+        height: 56px;
+        background: rgba(239, 68, 68, 0.1);
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 20px;
+      }
+
+      .problem-icon-wrap svg {
+        width: 28px;
+        height: 28px;
+        color: var(--red);
+      }
+      .problem-title {
+        font-size: 18px;
+        font-weight: 700;
+        margin-bottom: 12px;
+        color: var(--red);
+      }
+      .problem-text {
+        font-size: 14px;
+        color: var(--text-muted);
+        line-height: 1.6;
+      }
+
+      .problem-stat {
+        margin-top: 16px;
+        padding: 12px 16px;
+        background: rgba(239, 68, 68, 0.08);
+        border-radius: 10px;
+        font-size: 13px;
+        color: var(--red);
+        font-weight: 600;
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+
+      .problem-stat svg {
+        width: 14px;
+        height: 14px;
+        flex-shrink: 0;
+        margin-top: 2px;
+      }
+
+      /* ДЛЯ КОГО */
+      .for-whom {
+        padding: 80px 0;
+        background: linear-gradient(
+          180deg,
+          transparent,
+          rgba(79, 142, 247, 0.03),
+          transparent
+        );
+      }
+
+      .for-whom-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+        margin-top: 40px;
+      }
+
+      .for-whom-card {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 20px 24px;
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: 16px;
+        transition: all 0.3s ease;
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      .for-whom-card.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .for-whom-card:hover {
+        border-color: rgba(79, 142, 247, 0.3);
+        background: rgba(79, 142, 247, 0.05);
+        transform: translateY(-4px);
+      }
+
+      .for-whom-icon {
+        width: 44px;
+        height: 44px;
+        background: linear-gradient(135deg, var(--blue), var(--purple));
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+
+      .for-whom-icon svg {
+        width: 22px;
+        height: 22px;
+        color: white;
+      }
+      .for-whom-text {
+        font-size: 15px;
+        font-weight: 600;
+        line-height: 1.4;
+      }
+
+      /* РЕШЕНИЕ */
+      .solution {
+        padding: 120px 0;
+        background: linear-gradient(
+          180deg,
+          transparent,
+          rgba(79, 142, 247, 0.03),
+          transparent
+        );
+      }
+
+      .solution-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 80px;
+        align-items: center;
+      }
+
+      .solution-features {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      .feature-item {
+        display: flex;
+        gap: 16px;
+        align-items: flex-start;
+        padding: 20px 24px;
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: 16px;
+        transition: all 0.3s ease;
+        opacity: 0;
+        transform: translateX(-30px);
+      }
+
+      .feature-item.visible {
+        opacity: 1;
+        transform: translateX(0);
+      }
+
+      .feature-item:hover {
+        border-color: rgba(79, 142, 247, 0.3);
+        background: rgba(79, 142, 247, 0.05);
+        transform: translateX(8px);
+      }
+
+      .feature-icon {
+        width: 44px;
+        height: 44px;
+        background: linear-gradient(135deg, var(--blue), var(--purple));
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+
+      .feature-icon svg {
+        width: 22px;
+        height: 22px;
+        color: white;
+      }
+      .feature-content h4 {
+        font-size: 16px;
+        font-weight: 700;
+        margin-bottom: 6px;
+      }
+      .feature-content p {
+        font-size: 14px;
+        color: var(--text-muted);
+        line-height: 1.5;
+      }
+
+      /* КАК РАБОТАЕТ */
+      .how {
+        padding: 120px 0;
+      }
+
+      .steps {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+        margin-top: 60px;
+      }
+
+      .step-card {
+        padding: 32px;
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: 20px;
+        opacity: 0;
+        transform: translateY(40px);
+        transition: all 0.6s ease;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .step-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: linear-gradient(90deg, var(--blue), var(--purple));
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+
+      .step-card:hover::before {
+        opacity: 1;
+      }
+      .step-card.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .step-card:hover {
+        border-color: rgba(79, 142, 247, 0.3);
+        box-shadow: 0 20px 60px rgba(79, 142, 247, 0.1);
+      }
+
+      .step-icon {
+        width: 48px;
+        height: 48px;
+        background: rgba(79, 142, 247, 0.1);
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 16px;
+      }
+
+      .step-icon svg {
+        width: 24px;
+        height: 24px;
+        color: var(--blue);
+      }
+
+      .step-num {
+        font-size: 64px;
+        font-weight: 900;
+        background: linear-gradient(
+          135deg,
+          rgba(79, 142, 247, 0.2),
+          rgba(124, 58, 237, 0.2)
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        line-height: 1;
+        margin-bottom: 16px;
+      }
+
+      .step-title {
+        font-size: 18px;
+        font-weight: 700;
+        margin-bottom: 10px;
+      }
+      .step-text {
+        font-size: 14px;
+        color: var(--text-muted);
+        line-height: 1.6;
+      }
+
+      /* ТАРИФЫ */
+      .pricing {
+        padding: 120px 0;
+        background: linear-gradient(
+          180deg,
+          transparent,
+          rgba(124, 58, 237, 0.03),
+          transparent
+        );
+      }
+
+      .pricing-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+        margin-top: 60px;
+        align-items: start;
+      }
+
+      .price-card {
+        padding: 40px 32px;
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: 24px;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.4s ease;
+        opacity: 0;
+        transform: translateY(40px);
+      }
+
+      .price-card.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .price-card:hover {
+        transform: translateY(-8px);
+      }
+
+      .price-card.popular {
+        border-color: rgba(79, 142, 247, 0.5);
+        background: rgba(79, 142, 247, 0.05);
+        box-shadow: 0 0 60px rgba(79, 142, 247, 0.15);
+        transform: scale(1.05);
+      }
+
+      .price-card.popular:hover {
+        transform: scale(1.05) translateY(-8px);
+      }
+      .price-card.premium {
+        border-color: rgba(245, 158, 11, 0.3);
+      }
+      .price-card.premium:hover {
+        border-color: rgba(245, 158, 11, 0.5);
+        box-shadow: 0 20px 60px rgba(245, 158, 11, 0.1);
+      }
+
+      .price-badge {
+        position: absolute;
+        top: -1px;
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 6px 20px;
+        background: linear-gradient(135deg, var(--blue), var(--purple));
+        border-radius: 0 0 12px 12px;
+        font-size: 12px;
+        font-weight: 700;
+        white-space: nowrap;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .price-badge svg {
+        width: 12px;
+        height: 12px;
+      }
+      .price-badge.gold {
+        background: linear-gradient(135deg, var(--gold), #d97706);
+      }
+
+      .price-tier {
+        font-size: 13px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--text-muted);
+        margin-bottom: 8px;
+        margin-top: 20px;
+      }
+
+      .price-name {
+        font-size: 28px;
+        font-weight: 800;
+        margin-bottom: 20px;
+      }
+      .price-old {
+        font-size: 16px;
+        color: var(--text-muted);
+        text-decoration: line-through;
+        margin-bottom: 4px;
+      }
+      .price-current {
+        font-size: 40px;
+        font-weight: 900;
+        margin-bottom: 4px;
+      }
+
+      .price-card:nth-child(1) .price-current {
+        background: linear-gradient(135deg, #cd7f32, #a0522d);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .price-card.popular .price-current {
+        background: linear-gradient(135deg, var(--blue), var(--cyan));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .price-card.premium .price-current {
+        background: linear-gradient(135deg, var(--gold), #fbbf24);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .price-period {
+        font-size: 13px;
+        color: var(--text-muted);
+        margin-bottom: 24px;
+      }
+      .price-divider {
+        height: 1px;
+        background: var(--card-border);
+        margin: 24px 0;
+      }
+
+      .price-features {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-bottom: 32px;
+      }
+
+      .price-features li {
+        display: flex;
+        gap: 10px;
+        align-items: flex-start;
+        font-size: 14px;
+        color: var(--text-muted);
+        line-height: 1.5;
+      }
+
+      .check {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        margin-top: 1px;
+      }
+
+      .check svg {
+        width: 11px;
+        height: 11px;
+      }
+      .check-bronze {
+        background: rgba(205, 127, 50, 0.15);
+        color: #cd7f32;
+      }
+      .check-blue {
+        background: rgba(79, 142, 247, 0.15);
+        color: var(--blue);
+      }
+      .check-gold {
+        background: rgba(245, 158, 11, 0.15);
+        color: var(--gold);
+      }
+
+      .price-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        width: 100%;
+        padding: 14px;
+        border-radius: 12px;
+        font-size: 15px;
+        font-weight: 700;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        border: none;
+      }
+
+      .price-btn svg {
+        width: 16px;
+        height: 16px;
+      }
+      .price-btn-outline {
+        background: transparent;
+        border: 1px solid var(--card-border);
+        color: var(--text);
+      }
+      .price-btn-outline:hover {
+        border-color: var(--blue);
+        color: var(--blue);
+      }
+      .price-btn-primary {
+        background: linear-gradient(135deg, var(--blue), var(--purple));
+        color: white;
+        box-shadow: 0 0 30px var(--blue-glow);
+      }
+      .price-btn-primary:hover {
+        box-shadow: 0 0 50px var(--blue-glow);
+        transform: translateY(-2px);
+      }
+      .price-btn-gold {
+        background: linear-gradient(135deg, var(--gold), #d97706);
+        color: white;
+        box-shadow: 0 0 30px rgba(245, 158, 11, 0.3);
+      }
+      .price-btn-gold:hover {
+        box-shadow: 0 0 50px rgba(245, 158, 11, 0.4);
+        transform: translateY(-2px);
+      }
+
+      /* FAQ */
+      .faq {
+        padding: 120px 0;
+      }
+
+      .faq-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        margin-top: 60px;
+        max-width: 800px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .faq-item {
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: 16px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      .faq-item.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .faq-item:hover {
+        border-color: rgba(16, 185, 129, 0.3);
+      }
+
+      .faq-q {
+        padding: 20px 24px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        cursor: pointer;
+        gap: 16px;
+      }
+
+      .faq-q-text {
+        font-size: 16px;
+        font-weight: 600;
+        display: flex;
+        gap: 12px;
+        align-items: center;
+      }
+
+      .faq-q-icon {
+        width: 32px;
+        height: 32px;
+        background: rgba(16, 185, 129, 0.1);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+
+      .faq-q-icon svg {
+        width: 16px;
+        height: 16px;
+        color: var(--green);
+      }
+
+      .faq-arrow {
+        width: 32px;
+        height: 32px;
+        background: rgba(16, 185, 129, 0.1);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        transition: transform 0.3s ease;
+      }
+
+      .faq-arrow svg {
+        width: 16px;
+        height: 16px;
+        color: var(--green);
+      }
+      .faq-item.open .faq-arrow {
+        transform: rotate(45deg);
+      }
+
+      .faq-a {
+        padding: 0 24px;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.4s ease, padding 0.4s ease;
+        font-size: 14px;
+        color: var(--text-muted);
+        line-height: 1.6;
+      }
+
+      .faq-item.open .faq-a {
+        max-height: 300px;
+        padding: 0 24px 20px;
+      }
+      .cta-card {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 80px 60px;
+        background: var(--card-bg);
+        border: 1px solid rgba(79, 142, 247, 0.2);
+        border-radius: 32px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .cta-card::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          135deg,
+          rgba(79, 142, 247, 0.05),
+          rgba(124, 58, 237, 0.05)
+        );
+        border-radius: 32px;
+      }
+
+      .cta-title {
+        font-size: clamp(32px, 4vw, 48px);
+        font-weight: 800;
+        margin-bottom: 16px;
+        line-height: 1.2;
+      }
+      .cta-sub {
+        font-size: 18px;
+        color: var(--text-muted);
+        line-height: 1.6;
+        margin-bottom: 48px;
+      }
+
+      .cta-gifts {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+        margin-bottom: 48px;
+        text-align: left;
+      }
+
+      .gift-item {
+        padding: 24px;
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid var(--card-border);
+        border-radius: 16px;
+        transition: all 0.3s ease;
+      }
+
+      .gift-item:hover {
+        border-color: rgba(79, 142, 247, 0.3);
+        background: rgba(79, 142, 247, 0.04);
+      }
+
+      .gift-icon {
+        width: 48px;
+        height: 48px;
+        background: rgba(79, 142, 247, 0.1);
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 14px;
+      }
+
+      .gift-icon svg {
+        width: 24px;
+        height: 24px;
+        color: var(--blue);
+      }
+      .gift-title {
+        font-size: 14px;
+        font-weight: 700;
+        margin-bottom: 6px;
+        color: var(--blue);
+      }
+      .gift-text {
+        font-size: 13px;
+        color: var(--text-muted);
+        line-height: 1.5;
+      }
+
+      .cta-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        padding: 20px 48px;
+        background: linear-gradient(135deg, var(--blue), var(--purple));
+        border: none;
+        border-radius: 50px;
+        color: white;
+        font-size: 18px;
+        font-weight: 700;
+        cursor: pointer;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        box-shadow: 0 0 40px var(--blue-glow);
+        position: relative;
+      }
+
+      .cta-btn svg {
+        width: 20px;
+        height: 20px;
+      }
+      .cta-btn:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 0 80px var(--blue-glow);
+      }
+
+      .cta-note {
+        margin-top: 16px;
+        font-size: 13px;
+        color: var(--text-muted);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+      }
+
+      .cta-note svg {
+        width: 14px;
+        height: 14px;
+        color: var(--green);
+      }
+
+      /* ФУТЕР */
+      footer {
+        padding: 40px;
+        border-top: 1px solid var(--card-border);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .footer-logo {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 16px;
+        font-weight: 700;
+        background: linear-gradient(135deg, var(--blue), var(--purple));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .footer-logo svg {
+        width: 18px;
+        height: 18px;
+        flex-shrink: 0;
+      }
+      .footer-text {
+        font-size: 13px;
+        color: var(--text-muted);
+      }
+
+      /* АНИМАЦИИ */
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes fadeInRight {
+        from {
+          opacity: 0;
+          transform: translateX(40px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0px) rotate(-2deg);
+        }
+        50% {
+          transform: translateY(-20px) rotate(2deg);
+        }
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+          transform: scale(1);
+        }
+        50% {
+          opacity: 0.5;
+          transform: scale(0.8);
+        }
+      }
+
+      @keyframes typingDot {
+        0%,
+        60%,
+        100% {
+          transform: translateY(0);
+          opacity: 0.4;
+        }
+        30% {
+          transform: translateY(-6px);
+          opacity: 1;
+        }
+      }
+
+      /* АДАПТИВ */
+      @media (max-width: 1024px) {
+        .stats-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .problems-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .steps {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .pricing-grid {
+          gap: 16px;
+        }
+        .price-card {
+          padding: 28px 20px;
+        }
+        .price-card.popular {
+          transform: scale(1.02);
+        }
+        .for-whom-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      @media (max-width: 768px) {
+        nav {
+          padding: 12px 16px;
+        }
+        .nav-logo {
+          font-size: 14px;
+          gap: 6px;
+        }
+        .nav-logo svg {
+          width: 18px;
+          height: 18px;
+        }
+        .nav-btn {
+          padding: 6px 12px;
+          font-size: 12px;
+          gap: 5px;
+        }
+        .nav-btn svg {
+          width: 13px;
+          height: 13px;
+        }
+
+        .hero {
+          padding: 100px 20px 60px;
+          min-height: auto;
+        }
+        .hero-grid {
+          grid-template-columns: 1fr;
+          gap: 48px;
+          text-align: center;
+        }
+        .hero-badge {
+          justify-content: center;
+        }
+        .hero-title {
+          font-size: 32px;
+        }
+        .hero-subtitle {
+          font-size: 16px;
+        }
+        .hero-btns {
+          justify-content: center;
+          flex-direction: column;
+          align-items: center;
+        }
+        .btn-primary,
+        .btn-secondary {
+          width: 100%;
+          justify-content: center;
+          font-size: 15px;
+          padding: 14px 24px;
+        }
+
+        .hero-visual {
+          display: flex;
+          justify-content: center;
+          opacity: 1;
+        }
+
+        .phone-mockup {
+          width: 200px;
+          height: 370px;
+          padding: 12px;
+          border-radius: 28px;
+          overflow: hidden;
+        }
+        .phone-chat {
+          gap: 6px;
+          max-height: 300px;
+        }
+        .chat-header {
+          padding-bottom: 8px;
+          margin-bottom: 4px;
+        }
+        .chat-avatar {
+          width: 26px;
+          height: 26px;
+        }
+        .chat-avatar svg {
+          width: 12px;
+          height: 12px;
+        }
+        .chat-name {
+          font-size: 10px;
+        }
+        .chat-status {
+          font-size: 9px;
+        }
+        .msg {
+          font-size: 10px;
+          padding: 6px 8px;
+        }
+        .msg-time {
+          font-size: 8px;
+        }
+        .typing-dot {
+          width: 4px;
+          height: 4px;
+        }
+
+        .stats {
+          padding: 40px 0;
+        }
+        .stats-grid {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 20px;
+          padding: 0 20px;
+        }
+        .stat-num {
+          font-size: 36px;
+        }
+        .stat-label {
+          font-size: 12px;
+        }
+
+        .container {
+          padding: 0 20px;
+        }
+        .problems,
+        .solution,
+        .how,
+        .pricing,
+        .faq,
+        .cta,
+        .for-whom {
+          padding: 80px 0;
+        }
+        .section-title {
+          font-size: 28px;
+        }
+        .section-sub {
+          font-size: 15px;
+          margin-bottom: 40px;
+        }
+
+        .problems-grid {
+          grid-template-columns: 1fr;
+          gap: 16px;
+        }
+        .problem-card {
+          padding: 24px;
+        }
+        .problem-icon-wrap {
+          width: 44px;
+          height: 44px;
+          border-radius: 12px;
+          margin-bottom: 14px;
+        }
+        .problem-icon-wrap svg {
+          width: 22px;
+          height: 22px;
+        }
+        .problem-title {
+          font-size: 16px;
+        }
+        .problem-text {
+          font-size: 13px;
+        }
+        .problem-stat {
+          font-size: 12px;
+          padding: 10px 12px;
+          flex-wrap: wrap;
+          word-break: break-word;
+        }
+
+        .for-whom-grid {
+          grid-template-columns: 1fr;
+          gap: 12px;
+        }
+        .for-whom-card {
+          padding: 16px 18px;
+        }
+
+        .solution-grid {
+          grid-template-columns: 1fr;
+          gap: 40px;
+        }
+        .feature-item {
+          padding: 16px 18px;
+        }
+
+        .steps {
+          grid-template-columns: 1fr;
+          gap: 16px;
+        }
+        .step-card {
+          padding: 24px;
+        }
+        .step-num {
+          font-size: 48px;
+        }
+
+        .pricing-grid {
+          grid-template-columns: 1fr;
+          gap: 16px;
+        }
+        .price-card {
+          padding: 32px 24px;
+        }
+        .price-card.popular {
+          transform: scale(1);
+        }
+        .price-card.popular:hover {
+          transform: translateY(-4px);
+        }
+        .price-current {
+          font-size: 32px;
+        }
+
+        .faq-q-text {
+          font-size: 14px;
+        }
+
+        .cta-card {
+          padding: 40px 20px;
+          border-radius: 24px;
+        }
+        .cta-title {
+          font-size: 28px;
+        }
+        .cta-sub {
+          font-size: 15px;
+          margin-bottom: 32px;
+        }
+        .cta-gifts {
+          grid-template-columns: 1fr;
+          gap: 12px;
+          margin-bottom: 32px;
+        }
+        .cta-btn {
+          width: 100%;
+          justify-content: center;
+          font-size: 16px;
+          padding: 16px 24px;
+        }
+
+        footer {
+          flex-direction: column;
+          gap: 12px;
+          text-align: center;
+          padding: 28px 20px;
+        }
+      }
+
+      @media (max-width: 390px) {
+        .hero-title {
+          font-size: 26px;
+        }
+        .phone-mockup {
+          width: 175px;
+          height: 340px;
+        }
+        .phone-chat {
+          max-height: 270px;
+        }
+        .stats-grid {
+          gap: 16px;
+        }
+        .stat-num {
+          font-size: 28px;
+        }
+        .section-title {
+          font-size: 24px;
+        }
+        .cta-title {
+          font-size: 24px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="particles"></canvas>
+
+    <!-- NAV -->
+    <nav>
+      <div class="nav-logo">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="url(#grad1)"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <defs>
+            <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color: #4f8ef7" />
+              <stop offset="100%" style="stop-color: #7c3aed" />
+            </linearGradient>
+          </defs>
+          <path d="M12 2L2 7l10 5 10-5-10-5z" />
+          <path d="M2 17l10 5 10-5" />
+          <path d="M2 12l10 5 10-5" />
+        </svg>
+        НейроМенеджер
+      </div>
+      <a href="https://t.me/arinashrr" target="_blank" class="nav-btn">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path
+            d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248l-2.01 9.468c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L7.088 14.15l-2.95-.924c-.64-.203-.654-.64.136-.948l11.526-4.443c.537-.194 1.006.131.762.413z"
+          />
+        </svg>
+        Написать в Telegram
+      </a>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-bg"></div>
+      <div class="hero-grid">
+        <div class="hero-content">
+          <div class="hero-badge">
+            <span class="badge-dot"></span>
+            ИИ-решения для недвижимости 2026
+          </div>
+          <h1 class="hero-title">
+            Ваш новый<br />
+            <span class="accent">лучший сотрудник</span><br />
+            уже в Telegram
+          </h1>
+          <p class="hero-subtitle">
+            ИИ-менеджер знает ваши объекты лучше чем новый сотрудник в первый
+            месяц работы.<br /><br />
+            <strong>Отвечает за 2 секунды — днём, ночью и в выходные.</strong>
+          </p>
+          <div class="hero-btns">
+            <a
+              href="https://t.me/arinashrr"
+              target="_blank"
+              class="btn-primary"
+            >
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path
+                  d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248l-2.01 9.468c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L7.088 14.15l-2.95-.924c-.64-.203-.654-.64.136-.948l11.526-4.443c.537-.194 1.006.131.762.413z"
+                />
+              </svg>
+              Написать в Telegram
+            </a>
+            <a href="#pricing" class="btn-secondary">
+              Смотреть тарифы
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M5 12h14M12 5l7 7-7 7" />
+              </svg>
+            </a>
+          </div>
+        </div>
+        <div class="hero-visual">
+          <div class="phone-mockup">
+            <div class="phone-notch"></div>
+            <div class="phone-chat">
+              <div class="chat-header">
+                <div class="chat-avatar">
+                  <svg viewBox="0 0 24 24" fill="white">
+                    <path
+                      d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a7 7 0 0 1 7-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 0 1 2-2M7.5 13A2.5 2.5 0 0 0 5 15.5 2.5 2.5 0 0 0 7.5 18 2.5 2.5 0 0 0 10 15.5 2.5 2.5 0 0 0 7.5 13m9 0a2.5 2.5 0 0 0-2.5 2.5 2.5 2.5 0 0 0 2.5 2.5 2.5 2.5 0 0 0 2.5-2.5 2.5 2.5 0 0 0-2.5-2.5z"
+                    />
+                  </svg>
+                </div>
+                <div>
+                  <div class="chat-name">ИИ-Менеджер</div>
+                  <div class="chat-status">● онлайн</div>
+                </div>
+              </div>
+              <div class="msg msg-in" id="msg1">
+                Здравствуйте! Интересует квартира в ЖК Солнечный
+                <div class="msg-time">23:47</div>
+              </div>
+              <div class="typing-indicator" id="typing">
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+              </div>
+              <div class="msg msg-out" id="msg2">
+                Добрый вечер! Какой бюджет и сколько комнат рассматриваете?
+                <div class="msg-time">23:47</div>
+              </div>
+              <div class="msg msg-in" id="msg3">
+                До 8 млн, 2-3 комнаты
+                <div class="msg-time">23:48</div>
+              </div>
+              <div class="msg msg-out" id="msg4">
+                Отлично! Есть подходящие варианты. Запишу вас на показ — когда
+                удобно?
+                <div class="msg-time">23:48</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- СТАТЫ -->
+    <section class="stats">
+      <div class="container">
+        <div class="stats-grid">
+          <div class="stat-item">
+            <div class="stat-icon">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#4f8ef7"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
+                <polyline points="17 6 23 6 23 12" />
+              </svg>
+            </div>
+            <div class="stat-num" data-target="80" data-suffix="%">0%</div>
+            <div class="stat-label">сделок теряется из-за долгого ответа</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-icon">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#4f8ef7"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <polyline points="12 6 12 12 16 14" />
+              </svg>
+            </div>
+            <div class="stat-num" data-target="2" data-suffix="с">0с</div>
+            <div class="stat-label">Скорость ответа бота</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-icon">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#4f8ef7"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                <line x1="16" y1="2" x2="16" y2="6" />
+                <line x1="8" y1="2" x2="8" y2="6" />
+                <line x1="3" y1="10" x2="21" y2="10" />
+              </svg>
+            </div>
+            <div class="stat-num" data-target="24" data-suffix="/7">0/7</div>
+            <div class="stat-label">Работает без выходных</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-icon">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#4f8ef7"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
+              </svg>
+            </div>
+            <div class="stat-num" data-target="90" data-suffix="%">0%</div>
+            <div class="stat-label">клиентов думают что это живой менеджер</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ПРОБЛЕМЫ -->
+    <section class="problems">
+      <div class="container">
+        <div class="section-tag tag-red">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <circle cx="12" cy="12" r="10" />
+            <line x1="12" y1="8" x2="12" y2="12" />
+            <line x1="12" y1="16" x2="12.01" y2="16" />
+          </svg>
+          Проблема
+        </div>
+        <h2 class="section-title">
+          Сколько клиентов вы<br />теряете прямо сейчас?
+        </h2>
+        <p class="section-sub">
+          Каждый час без ответа — это сделка которая уходит к конкурентам.
+        </p>
+        <div class="problems-grid">
+          <div class="problem-card">
+            <div class="problem-icon-wrap">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+              </svg>
+            </div>
+            <div class="problem-title">Ночь и выходные</div>
+            <p class="problem-text">
+              Покупатель написал в 23:00. Утром он уже записался на показ к
+              другому агенту который ответил через бота.
+            </p>
+            <div class="problem-stat">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <polyline points="18 15 12 9 6 15" />
+              </svg>
+              60% заявок приходят в нерабочее время
+            </div>
+          </div>
+          <div class="problem-card">
+            <div class="problem-icon-wrap">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <polyline points="12 6 12 12 16 14" />
+              </svg>
+            </div>
+            <div class="problem-title">Долгий ответ</div>
+            <p class="problem-text">
+              Если клиент не получает ответ в течение 5 минут — вероятность
+              сделки падает на 80%.
+            </p>
+            <div class="problem-stat">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <polyline points="6 9 12 15 18 9" />
+              </svg>
+              -80% конверсии после 5 минут ожидания
+            </div>
+          </div>
+          <div class="problem-card">
+            <div class="problem-icon-wrap">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <line x1="12" y1="1" x2="12" y2="23" />
+                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+              </svg>
+            </div>
+            <div class="problem-title">Живой менеджер</div>
+            <p class="problem-text">
+              От 60 000 ₽ оклад + налоги + 80% времени на пустые вопросы "какая
+              цена" и "есть ли ипотека".
+            </p>
+            <div class="problem-stat">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke
+                stroke-width="2.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <polyline points="18 15 12 9 6 15" />
+              </svg>
+              720 000 ₽ в год только на зарплату
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ДЛЯ КОГО -->
+    <section class="for-whom">
+      <div class="container">
+        <div class="section-tag tag-blue">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+            <circle cx="12" cy="7" r="4" />
+          </svg>
+          Для кого этот бот?
+        </div>
+        <h2 class="section-title">Идеально для:</h2>
+        <div class="for-whom-grid">
+          <div class="for-whom-card">
+            <div class="for-whom-icon">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                <polyline points="9 22 9 12 15 12 15 22" />
+              </svg>
+            </div>
+            <div class="for-whom-text">Агентства недвижимости</div>
+          </div>
+          <div class="for-whom-card">
+            <div class="for-whom-icon">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <rect x="2" y="7" width="20" height="14" rx="2" />
+                <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
+                <line x1="12" y1="12" x2="12" y2="16" />
+                <line x1="10" y1="14" x2="14" y2="14" />
+              </svg>
+            </div>
+            <div class="for-whom-text">Застройщиков</div>
+          </div>
+          <div class="for-whom-card">
+            <div class="for-whom-icon">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <polygon points="12 2 2 7 12 12 22 7 12 2" />
+                <polyline points="2 17 12 22 22 17" />
+                <polyline points="2 12 12 17 22 12" />
+              </svg>
+            </div>
+            <div class="for-whom-text">Строительных и ремонтных компаний</div>
+          </div>
+          <div class="for-whom-card">
+            <div class="for-whom-icon">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <line x1="2" y1="12" x2="22" y2="12" />
+                <path
+                  d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"
+                />
+              </svg>
+            </div>
+            <div class="for-whom-text">Консалтинговых агентств "под ключ"</div>
+          </div>
+          <div class="for-whom-card">
+            <div class="for-whom-icon">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M20 7h-9" />
+                <path d="M14 17H5" />
+                <circle cx="17" cy="17" r="3" />
+                <circle cx="7" cy="7" r="3" />
+              </svg>
+            </div>
+            <div class="for-whom-text">Девелоперов и частных риэлторов</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- РЕШЕНИЕ -->
+    <section class="solution">
+      <div class="container">
+        <div class="solution-grid">
+          <div>
+            <div class="section-tag tag-green">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
+              Решение
+            </div>
+            <h2 class="section-title">Полноценный отдел продаж — без отдела</h2>
+            <p class="section-sub">
+              Внедряем ИИ-ассистента который общается неотличимо от живого
+              менеджера по недвижимости
+            </p>
+          </div>
+          <div class="solution-features">
+            <div class="feature-item">
+              <div class="feature-icon">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+                </svg>
+              </div>
+              <div class="feature-content">
+                <h4>Отвечает за 2 секунды</h4>
+                <p>
+                  В любое время дня и ночи. Без выходных. Без плохого
+                  настроения.
+                </p>
+              </div>
+            </div>
+            <div class="feature-item">
+              <div class="feature-icon">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path
+                    d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a7 7 0 0 1 7-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 0 1 2-2z"
+                  />
+                </svg>
+              </div>
+              <div class="feature-content">
+                <h4>Знает всё о вашем объекте</h4>
+                <p>
+                  Консультирует строго по вашей базе объектов — без выдуманных
+                  цен и условий.
+                </p>
+              </div>
+            </div>
+            <div class="feature-item">
+              <div class="feature-icon">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <circle cx="12" cy="12" r="10" />
+                  <polyline points="12 6 12 12 16 14" />
+                </svg>
+              </div>
+              <div class="feature-content">
+                <h4>Записывает на показ</h4>
+                <p>
+                  Квалифицирует клиента, узнаёт бюджет и бронирует встречу в
+                  календарь.
+                </p>
+              </div>
+            </div>
+            <div class="feature-item">
+              <div class="feature-icon">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <rect x="3" y="3" width="18" height="18" rx="2" />
+                  <path d="M3 9h18M9 21V9" />
+                </svg>
+              </div>
+              <div class="feature-content">
+                <h4>Фиксирует всех лидов</h4>
+                <p>
+                  Автоматически записывает данные в Google Sheets и уведомляет
+                  вас.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- КАК РАБОТАЕТ -->
+    <section class="how">
+      <div class="container">
+        <div class="section-tag tag-blue">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <circle cx="12" cy="12" r="3" />
+            <path
+              d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"
+            />
+          </svg>
+          Как это работает
+        </div>
+        <h2 class="section-title">
+          Магия автоматизации<br />без вашего участия
+        </h2>
+        <p class="section-sub">Вот что происходит пока вы спите</p>
+        <div class="steps">
+          <div class="step-card">
+            <div class="step-icon">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
+                />
+              </svg>
+            </div>
+            <div class="step-num">01</div>
+            <div class="step-title">Клиент пишет ночью</div>
+            <p class="step-text">
+              В 2 часа ночи покупатель пишет про квартиру. Бот отвечает
+              мгновенно — без задержек.
+            </p>
+          </div>
+          <div class="step-card">
+            <div class="step-icon">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+                <line x1="12" y1="17" x2="12.01" y2="17" />
+              </svg>
+            </div>
+            <div class="step-num">02</div>
+            <div class="step-title">Квалифицирует клиента</div>
+            <p class="step-text">
+              Бот узнаёт бюджет, количество комнат, район и срок покупки.
+            </p>
+          </div>
+          <div class="step-card">
+            <div class="step-icon">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+              </svg>
+            </div>
+            <div class="step-num">03</div>
+            <div class="step-title">Отрабатывает возражения</div>
+            <p class="step-text">
+              «Дорого», «подумаю», «нет ипотеки» — бот знает что ответить на
+              каждое.
+            </p>
+          </div>
+          <div class="step-card">
+            <div class="step-icon">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <rect x="3" y="4" width="18" height="18" rx="2" />
+                <line x1="16" y1="2" x2="16" y2="6" />
+                <line x1="8" y1="2" x2="8" y2="6" />
+                <line x1="3" y1="10" x2="21" y2="10" />
+              </svg>
+            </div>
+            <div class="step-num">04</div>
+            <div class="step-title">Бронирует показ</div>
+            <p class="step-text">
+              Записывает клиента на просмотр объекта прямо в Google Calendar.
+            </p>
+          </div>
+          <div class="step-card">
+            <div class="step-icon">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"
+                />
+                <polyline points="14 2 14 8 20 8" />
+                <line x1="16" y1="13" x2="8" y2="13" />
+                <line x1="16" y1="17" x2="8" y2="17" />
+              </svg>
+            </div>
+            <div class="step-num">05</div>
+            <div class="step-title">Фиксирует в таблице</div>
+            <p class="step-text">
+              Данные клиента мгновенно улетают в Google Sheets — всё
+              структурировано.
+            </p>
+          </div>
+          <div class="step-card">
+            <div class="step-icon">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <polyline points="22 7 13.5 15.5 8.5 10.5 2 17" />
+                <polyline points="16 7 22 7 22 13" />
+              </svg>
+            </div>
+            <div class="step-num">06</div>
+            <div class="step-title">Вы закрываете сделку</div>
+            <p class="step-text">
+              Утром получаете готового тёплого клиента с бюджетом и датой
+              показа.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ТАРИФЫ -->
+    <section class="pricing" id="pricing">
+      <div class="container">
+        <div class="section-tag tag-gold">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <polygon
+              points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+            />
+          </svg>
+          Тарифы
+        </div>
+        <h2 class="section-title">Выберите ваш уровень</h2>
+        <p class="section-sub">Оплата один раз. Бот работает навсегда.</p>
+        <div class="pricing-grid">
+          <div class="price-card">
+            <div class="price-tier">Старт</div>
+            <div class="price-name">Быстрый старт</div>
+            <div class="price-old">49 000 ₽</div>
+            <div class="price-current">29 900 ₽</div>
+            <div class="price-period">
+              Оплата один раз · подписки от 6 000 ₽/мес
+            </div>
+            <div class="price-divider"></div>
+            <ul class="price-features">
+              <li>
+                <span class="check check-bronze"
+                  ><svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="3"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <polyline points="20 6 9 17 4 12" /></svg></span
+                >ИИ-менеджер общается как живой человек
+              </li>
+              <li>
+                <span class="check check-bronze"
+                  ><svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="3"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <polyline points="20 6 9 17 4 12" /></svg></span
+                >Квалифицирует клиента по бюджету и объекту
+              </li>
+              <li>
+                <span class="check check-bronze"
+                  ><svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="3"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <polyline points="20 6 9 17 4 12" /></svg></span
+                >Отвечает на вопросы по объектам 24/7
+              </li>
+              <li>
+                <span class="check check-bronze"
+                  ><svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="3"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <polyline points="20 6 9 17 4 12" /></svg></span
+                >Записывает лидов в Google Sheets
+              </li>
+              <li>
+                <span class="check check-bronze"
+                  ><svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="3"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <polyline points="20 6 9 17 4 12" /></svg></span
+                >Уведомление вам в Telegram
+              </li>
+            </ul>
+            <a
+              href="https://t.me/arinashrr"
+              target="_blank"
+              class="price-btn price-btn-outline"
+            >
+              Выбрать СТАРТ
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M5 12h14M12 5l7 7-7 7" />
+              </svg>
+            </a>
+          </div>
+
+          <div class="price-card popular">
+            <div class="price-badge">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path
+                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"
+                />
+              </svg>
+              ХИТ ПРОДАЖ
+            </div>
+            <div class="price-tier">Бизнес</div>
+            <div class="price-name">Автоматизация</div>
+            <div class="price-old">64 000 ₽</div>
+            <div class="price-current">38 900 ₽</div>
+            <div class="price-period">
+              Оплата один раз · подписки от 6 000 ₽/мес
+            </div>
+            <div class="price-divider"></div>
+            <ul class="price-features">
+              <li>
+                <span class="check check-blue"
+                  ><svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="3"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <polyline points="20 6 9 17 4 12" /></svg></span
+                >Всё из тарифа СТАРТ
+              </li>
+              <li>
+                <span class="check check-blue"
+                  ><svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="3"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <polyline points="20 6 9 17 4 12" /></svg></span
+                >Понимает голосовые сообщения
+              </li>
+              <li>
+                <span class="check check-blue"
+                  ><svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="3"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <polyline points="20 6 9 17 4 12" /></svg></span
+                >Бронирует показы в Google Calendar
+              </li>
+              <li>
+                <span class="check check-blue"
+                  ><svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="3"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <polyline points="20 6 9 17 4 12" /></svg></span
+                >Напоминает клиенту о встрече
+              </li>
+              <li>
+                <span class="check check-blue"
+                  ><svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="3"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <polyline points="20 6 9 17 4 12" /></svg></span
+                >Сам пишет первым если клиент пропал
+              </li>
+            </ul>
+            <a
+              href="https://t.me/arinashrr"
+              target="_blank"
+              class="price-btn price-btn-primary"
+            >
+              Выбрать БИЗНЕС
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M5 12h14M12 5l7 7-7 7" />
+              </svg>
+            </a>
+          </div>
+
+          <div class="price-card premium">
+            <div class="price-badge gold">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <polygon
+                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+                />
+              </svg>
+              МАКСИМУМ
+            </div>
+            <div class="price-tier">Премиум</div>
+            <div class="price-name">Система продаж</div>
+            <div class="price-old">79 000 ₽</div>
+            <div class="price-current">48 900 ₽</div>
+            <div class="price-period">
+              Оплата один раз · подписки от 6 000 ₽/мес
+            </div>
+            <div class="price-divider"></div>
+            <ul class="price-features">
+              <li>
+                <span class="check check-gold"
+                  ><svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="3"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <polyline points="20 6 9 17 4 12" /></svg></span
+                >Всё из тарифа БИЗНЕС
+              </li>
+              <li>
+                <span class="check check-gold"
+                  ><svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="3"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <polyline points="20 6 9 17 4 12" /></svg></span
+                >Передача живому менеджеру
+              </li>
+              <li>
+                <span class="check check-gold"
+                  ><svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="3"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <polyline points="20 6 9 17 4 12" /></svg></span
+                >Несколько сценариев воронок
+              </li>
+              <li>
+                <span class="check check-gold"
+                  ><svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="3"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <polyline points="20 6 9 17 4 12" /></svg></span
+                >Умная аналитика по каждому диалогу
+              </li>
+              <li>
+                <span class="check check-gold"
+                  ><svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="3"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <polyline points="20 6 9 17 4 12" /></svg></span
+                >1 месяц поддержки включён
+              </li>
+            </ul>
+            <a
+              href="https://t.me/arinashrr"
+              target="_blank"
+              class="price-btn price-btn-gold"
+            >
+              Выбрать ПРЕМИУМ
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M5 12h14M12 5l7 7-7 7" />
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="faq">
+      <div class="container">
+        <div class="section-tag tag-green">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+          </svg>
+          Закрываем вопросы
+        </div>
+        <h2 class="section-title" style="text-align: center">
+          Это не расход — это инвестиция
+        </h2>
+        <p class="section-sub" style="margin: 16px auto 0; text-align: center">
+          Бот окупается с первой же сделки которую вы раньше упустили бы
+        </p>
+        <div class="faq-grid">
+          <div class="faq-item">
+            <div class="faq-q">
+              <div class="faq-q-text">
+                <div class="faq-q-icon">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+                    <line x1="12" y1="17" x2="12.01" y2="17" />
+                  </svg>
+                </div>
+                А если бот выдумает цены или условия по объекту?
+              </div>
+              <div class="faq-arrow">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <line x1="12" y1="5" x2="12" y2="19" />
+                  <line x1="5" y1="12" x2="19" y2="12" />
+                </svg>
+              </div>
+            </div>
+            <div class="faq-a">
+              Исключено. Бот работает строго в рамках вашей базы объектов. Если
+              нужного ответа нет — он скажет: «Уточню у менеджера и вернусь к
+              вам». Никакой самодеятельности.
+            </div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q">
+              <div class="faq-q-text">
+                <div class="faq-q-icon">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+                    <line x1="12" y1="17" x2="12.01" y2="17" />
+                  </svg>
+                </div>
+                Клиенты поймут что это бот и уйдут?
+              </div>
+              <div class="faq-arrow">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <line x1="12" y1="5" x2="12" y2="19" />
+                  <line x1="5" y1="12" x2="19" y2="12" />
+                </svg>
+              </div>
+            </div>
+            <div class="faq-a">
+              Мы настраиваем задержку печати, разговорный язык и обработку
+              голосовых. 90% людей думают что говорят с отличным живым
+              менеджером по недвижимости.
+            </div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q">
+              <div class="faq-q-text">
+                <div class="faq-q-icon">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+                    <line x1="12" y1="17" x2="12.01" y2="17" />
+                  </svg>
+                </div>
+                У меня большой каталог объектов — бот справится?
+              </div>
+              <div class="faq-arrow">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <line x1="12" y1="5" x2="12" y2="19" />
+                  <line x1="5" y1="12" x2="19" y2="12" />
+                </svg>
+              </div>
+            </div>
+            <div class="faq-a">
+              Загружаем весь ваш каталог, планировки, условия ипотеки и скрипты
+              продаж. Бот будет знать ваши объекты лучше чем новый сотрудник в
+              первый месяц работы.
+            </div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q">
+              <div class="faq-q-text">
+                <div class="faq-q-icon">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+                    <line x1="12" y1="17" x2="12.01" y2="17" />
+                  </svg>
+                </div>
+                Сколько времени занимает настройка?
+              </div>
+              <div class="faq-arrow">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <line x1="12" y1="5" x2="12" y2="19" />
+                  <line x1="5" y1="12" x2="19" y2="12" />
+                </svg>
+              </div>
+            </div>
+            <div class="faq-a">
+              От 5 до 7 рабочих дней. Вы даёте информацию о бизнесе и объектах —
+              мы настраиваем, тестируем и сдаём готового бота. Всё остальное на
+              нас.
+            </div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q">
+              <div class="faq-q-text">
+                <div class="faq-q-icon">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+                    <line x1="12" y1="17" x2="12.01" y2="17" />
+                  </svg>
+                </div>
+                Нужно ли платить каждый месяц?
+              </div>
+              <div class="faq-arrow">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <line x1="12" y1="5" x2="12" y2="19" />
+                  <line x1="5" y1="12" x2="19" y2="12" />
+                </svg>
+              </div>
+            </div>
+            <div class="faq-a">
+              Настройка оплачивается один раз. Дополнительно только подписки на
+              сервисы — от 6 000 ₽ в месяц. Это в 10 раз дешевле живого
+              менеджера.
+            </div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q">
+              <div class="faq-q-text">
+                <div class="faq-q-icon">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+                    <line x1="12" y1="17" x2="12.01" y2="17" />
+                  </svg>
+                </div>
+                Есть ли гарантия?
+              </div>
+              <div class="faq-arrow">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <line x1="12" y1="5" x2="12" y2="19" />
+                  <line x1="5" y1="12" x2="19" y2="12" />
+                </svg>
+              </div>
+            </div>
+            <div class="faq-a">
+              Запуск без рисков. Если бот не начнёт приносить лиды или у вас
+              возникнут проблемы с качеством обработки — бесплатно дорабатываем
+              или возвращаем деньги в течение 14 дней.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta">
+      <div class="cta-bg"></div>
+      <div class="container">
+        <div class="cta-card">
+          <div
+            class="section-tag tag-blue"
+            style="display: inline-flex; margin-bottom: 24px"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <polyline points="20 12 20 22 4 22 4 12" />
+              <rect x="2" y="7" width="20" height="5" />
+              <line x1="12" y1="22" x2="12" y2="7" />
+              <path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z" />
+              <path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z" />
+            </svg>
+            Бесплатно
+          </div>
+          <h2 class="cta-title">Готовы увидеть<br />его в деле?</h2>
+          <p class="cta-sub">
+            Напишите детали о вашем бизнесе — ниша, объекты, средний чек.<br />
+            В ответ я абсолютно бесплатно:
+          </p>
+          <div class="cta-gifts">
+            <div class="gift-item">
+              <div class="gift-icon">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <line x1="3" y1="12" x2="21" y2="12" />
+                  <line x1="3" y1="6" x2="21" y2="6" />
+                  <line x1="3" y1="18" x2="21" y2="18" />
+                </svg>
+              </div>
+              <div class="gift-title">Воронка продаж</div>
+              <p class="gift-text">
+                Пропишу по шагам как бот доведёт покупателя до записи на показ
+              </p>
+            </div>
+            <div class="gift-item">
+              <div class="gift-icon">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path
+                    d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a7 7 0 0 1 7-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 0 1 2-2z"
+                  />
+                </svg>
+              </div>
+              <div class="gift-title">База знаний</div>
+              <p class="gift-text">
+                Оцифрую часть ваших объектов и загружу в нейросеть
+              </p>
+            </div>
+            <div class="gift-item">
+              <div class="gift-icon">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path
+                    d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
+                  />
+                </svg>
+              </div>
+              <div class="gift-title">Демо-бот</div>
+              <p class="gift-text">
+                Пришлю готового бота — пообщайтесь сами и попробуйте
+              </p>
+            </div>
+          </div>
+          <a href="https://t.me/arinashrr" target="_blank" class="cta-btn">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248l-2.01 9.468c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L7.088 14.15l-2.95-.924c-.64-.203-.654-.64.136-.948l11.526-4.443c.537-.194 1.006.131.762.413z"
+              />
+            </svg>
+            Написать в Telegram
+          </a>
+          <p class="cta-note">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <polyline points="20 6 9 17 4 12" />
+            </svg>
+            Это вас ни к чему не обязывает. Понравится — обсудим внедрение. Не
+            понравится — просто закроете диалог
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ФУТЕР -->
+    <footer>
+      <div class="footer-logo">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="url(#grad2)"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <defs>
+            <linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color: #4f8ef7" />
+              <stop offset="100%" style="stop-color: #7c3aed" />
+            </linearGradient>
+          </defs>
+          <path d="M12 2L2 7l10 5 10-5-10-5z" />
+          <path d="M2 17l10 5 10-5" />
+          <path d="M2 12l10 5 10-5" />
+        </svg>
+        НейроМенеджер для бизнеса недвижимости
+      </div>
+      <div class="footer-text">Интегратор ИИ-решений для продаж</div>
+      <div class="footer-text">© 2026 Все права защищены</div>
+    </footer>
+
+    <script>
+      const canvas = document.getElementById("particles");
+      const ctx = canvas.getContext("2d");
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      window.addEventListener("resize", () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      });
+
+      const particles = [];
+      for (let i = 0; i < 80; i++) {
+        particles.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          r: Math.random() * 1.5 + 0.5,
+          dx: (Math.random() - 0.5) * 0.4,
+          dy: (Math.random() - 0.5) * 0.4,
+          opacity: Math.random() * 0.5 + 0.1,
+          color: Math.random() > 0.5 ? "79,142,247" : "124,58,237",
+        });
+      }
+
+      function drawParticles() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach((p, i) => {
+          p.x += p.dx;
+          p.y += p.dy;
+          if (p.x < 0 || p.x > canvas.width) p.dx *= -1;
+          if (p.y < 0 || p.y > canvas.height) p.dy *= -1;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(${p.color},${p.opacity})`;
+          ctx.fill();
+          particles.forEach((p2, j) => {
+            if (i === j) return;
+            const dist = Math.hypot(p.x - p2.x, p.y - p2.y);
+            if (dist < 120) {
+              ctx.beginPath();
+              ctx.moveTo(p.x, p.y);
+              ctx.lineTo(p2.x, p2.y);
+              ctx.strokeStyle = `rgba(79,142,247,${0.08 * (1 - dist / 120)})`;
+              ctx.lineWidth = 0.5;
+              ctx.stroke();
+            }
+          });
+        });
+        requestAnimationFrame(drawParticles);
+      }
+      drawParticles();
+
+      function showMsg(id, isTyping = false) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.style.display = isTyping ? "flex" : "block";
+        el.style.opacity = "0";
+        el.style.transform = "translateY(6px)";
+        requestAnimationFrame(() =>
+          requestAnimationFrame(() => {
+            el.style.transition = "opacity 0.3s ease, transform 0.3s ease";
+            el.style.opacity = "1";
+            el.style.transform = "translateY(0)";
+            setTimeout(() => {
+              const chat = document.querySelector(".phone-chat");
+              if (chat) chat.scrollTop = chat.scrollHeight;
+            }, 320);
+          })
+        );
+      }
+
+      function hideMsg(id) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.style.transition = "opacity 0.25s ease";
+        el.style.opacity = "0";
+        setTimeout(() => {
+          el.style.display = "none";
+        }, 250);
+      }
+
+      function resetChat() {
+        ["msg1", "typing", "msg2", "msg3", "msg4"].forEach((id) => {
+          const el = document.getElementById(id);
+          if (!el) return;
+          el.style.transition = "none";
+          el.style.opacity = "0";
+          el.style.display = "none";
+          el.style.transform = "translateY(6px)";
+        });
+        const chat = document.querySelector(".phone-chat");
+        if (chat) chat.scrollTop = 0;
+      }
+
+      function animateChat() {
+        resetChat();
+        setTimeout(() => showMsg("msg1"), 500);
+        setTimeout(() => showMsg("typing", true), 1300);
+        setTimeout(() => hideMsg("typing"), 2100);
+        setTimeout(() => showMsg("msg2"), 2200);
+        setTimeout(() => showMsg("msg3"), 3300);
+        setTimeout(() => showMsg("msg4"), 4500);
+        setTimeout(animateChat, 8000);
+      }
+      animateChat();
+
+      function animateCounter(el) {
+        const target = parseInt(el.getAttribute("data-target"));
+        const suffix = el.getAttribute("data-suffix") || "%";
+        let current = 0;
+        const step = target / 60;
+        const timer = setInterval(() => {
+          current += step;
+          if (current >= target) {
+            current = target;
+            clearInterval(timer);
+          }
+          el.textContent = Math.floor(current) + suffix;
+        }, 20);
+      }
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("visible");
+              const counter = entry.target.querySelector("[data-target]");
+              if (counter) animateCounter(counter);
+              observer.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.1 }
+      );
+
+      document.querySelectorAll(".stat-item").forEach((el, i) => {
+        el.style.transitionDelay = `${i * 0.05}s`;
+        observer.observe(el);
+      });
+      document.querySelectorAll(".problem-card").forEach((el, i) => {
+        el.style.transitionDelay = `${i * 0.06}s`;
+        observer.observe(el);
+      });
+      document.querySelectorAll(".for-whom-card").forEach((el, i) => {
+        el.style.transitionDelay = `${i * 0.06}s`;
+        observer.observe(el);
+      });
+      document.querySelectorAll(".feature-item").forEach((el, i) => {
+        el.style.transitionDelay = `${i * 0.06}s`;
+        observer.observe(el);
+      });
+      document.querySelectorAll(".step-card").forEach((el, i) => {
+        el.style.transitionDelay = `${i * 0.05}s`;
+        observer.observe(el);
+      });
+      document.querySelectorAll(".price-card").forEach((el, i) => {
+        el.style.transitionDelay = `${i * 0.07}s`;
+        observer.observe(el);
+      });
+      document.querySelectorAll(".faq-item").forEach((el, i) => {
+        el.style.transitionDelay = `${i * 0.04}s`;
+        observer.observe(el);
+      });
+
+      document.querySelectorAll(".faq-q").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const item = btn.parentElement;
+          const isOpen = item.classList.contains("open");
+          document
+            .querySelectorAll(".faq-item")
+            .forEach((i) => i.classList.remove("open"));
+          if (!isOpen) item.classList.add("open");
+        });
+      });
+
+      document.querySelectorAll('a[href^="#"]').forEach((a) => {
+        a.addEventListener("click", (e) => {
+          e.preventDefault();
+          const target = document.querySelector(a.getAttribute("href"));
+          if (target)
+            target.scrollIntoView({ behavior: "smooth", block: "start" });
+        });
+      });
+
+      window.addEventListener("scroll", () => {
+        document.querySelector("nav").style.boxShadow =
+          window.scrollY > 50 ? "0 4px 30px rgba(0,0,0,0.3)" : "none";
+      });
+
+      document.querySelectorAll(".price-card").forEach((card) => {
+        card.addEventListener("mousemove", (e) => {
+          const rect = card.getBoundingClientRect();
+          const x = (e.clientX - rect.left) / rect.width - 0.5;
+          const y = (e.clientY - rect.top) / rect.height - 0.5;
+          if (!card.classList.contains("popular")) {
+            card.style.transform = `perspective(1000px) rotateY(${
+              x * 8
+            }deg) rotateX(${-y * 8}deg) translateY(-8px)`;
+          }
+        });
+        card.addEventListener("mouseleave", () => {
+          card.style.transition = "transform 0.5s ease";
+          card.style.transform = card.classList.contains("popular")
+            ? "scale(1.05)"
+            : "translateY(0)";
+        });
+      });
+
+      const cursor = document.createElement("div");
+      cursor.style.cssText = `position:fixed;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(79,142,247,0.06) 0%,transparent 70%);pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:opacity 0.3s ease;`;
+      document.body.appendChild(cursor);
+      document.addEventListener("mousemove", (e) => {
+        cursor.style.left = e.clientX + "px";
+        cursor.style.top = e.clientY + "px";
+      });
+      document.addEventListener(
+        "mouseleave",
+        () => (cursor.style.opacity = "0")
+      );
+      document.addEventListener(
+        "mouseenter",
+        () => (cursor.style.opacity = "1")
+      );
+
+      const ctaBtn = document.querySelector(".cta-btn");
+      if (ctaBtn) {
+        ctaBtn.addEventListener("mousemove", (e) => {
+          const rect = ctaBtn.getBoundingClientRect();
+          ctaBtn.style.background = `radial-gradient(circle at ${
+            e.clientX - rect.left
+          }px ${
+            e.clientY - rect.top
+          }px, rgba(255,255,255,0.15), transparent 60%), linear-gradient(135deg, #4f8ef7, #7c3aed)`;
+        });
+        ctaBtn.addEventListener("mouseleave", () => {
+          ctaBtn.style.background = "linear-gradient(135deg, #4f8ef7, #7c3aed)";
+        });
+      }
+    </script>
+  </body>
+</html>
