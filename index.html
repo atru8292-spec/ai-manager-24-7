@@ -671,7 +671,392 @@
         font-weight: 600;
         line-height: 1.4;
       }
+      /* ====== COMPARISON SLIDER ====== */
+      .comparison {
+        padding: 120px 0 100px;
+        position: relative;
+        overflow: hidden;
+      }
 
+      .slider-wrapper {
+        margin-top: 48px;
+        position: relative;
+      }
+
+      .slider-track {
+        display: flex;
+        gap: 24px;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        scroll-behavior: smooth;
+        -webkit-overflow-scrolling: touch;
+        padding: 8px 0 32px;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+      }
+
+      .slider-track::-webkit-scrollbar {
+        display: none;
+      }
+
+      /* Центрирование первой и последней карточки */
+      .slider-track::before,
+      .slider-track::after {
+        content: "";
+        flex-shrink: 0;
+      }
+
+      .slide-card {
+        flex: 0 0 min(480px, 85vw);
+        scroll-snap-align: center;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid var(--card-border);
+        border-radius: 20px;
+        overflow: hidden;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .slide-card:hover {
+        border-color: rgba(99, 102, 241, 0.3);
+        box-shadow: 0 8px 40px rgba(99, 102, 241, 0.08);
+      }
+
+      /* Шапка карточки */
+      .slide-header {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 20px 24px;
+        border-bottom: 1px solid var(--card-border);
+        background: rgba(255, 255, 255, 0.02);
+      }
+
+      .slide-num {
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--primary);
+        background: rgba(99, 102, 241, 0.12);
+        padding: 4px 10px;
+        border-radius: 6px;
+        letter-spacing: 1px;
+      }
+
+      .slide-title {
+        font-size: 17px;
+        font-weight: 700;
+        color: #fff;
+      }
+
+      /* Тело карточки */
+      .slide-body {
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+      }
+
+      .slide-col {
+        padding: 16px 0;
+      }
+
+      .slide-col p {
+        font-size: 14px;
+        line-height: 1.6;
+        color: rgba(255, 255, 255, 0.7);
+        margin: 0;
+      }
+
+      .slide-col-label {
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        margin-bottom: 8px;
+      }
+
+      .slide-col--old .slide-col-label {
+        color: rgba(255, 59, 48, 0.6);
+      }
+
+      .slide-col--old p {
+        color: rgba(255, 255, 255, 0.45);
+      }
+
+      .slide-col--new .slide-col-label {
+        color: var(--primary);
+      }
+
+      .slide-col--new p {
+        color: rgba(255, 255, 255, 0.85);
+      }
+
+      .slide-divider {
+        height: 1px;
+        background: var(--card-border);
+        margin: 0;
+      }
+
+      /* Навигация */
+      .slider-nav {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
+        margin-top: 8px;
+      }
+
+      .slider-btn {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        border: 1px solid var(--card-border);
+        background: rgba(255, 255, 255, 0.04);
+        color: rgba(255, 255, 255, 0.6);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+      }
+
+      .slider-btn:hover {
+        border-color: var(--primary);
+        color: #fff;
+        background: rgba(99, 102, 241, 0.1);
+      }
+
+      .slider-dots {
+        display: flex;
+        gap: 8px;
+      }
+
+      .slider-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.15);
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        padding: 0;
+      }
+
+      .slider-dot.active {
+        background: var(--primary);
+        width: 24px;
+        border-radius: 4px;
+      }
+
+      /* ====== МОБИЛЬНЫЙ ====== */
+      @media (max-width: 768px) {
+        .comparison {
+          padding: 80px 0 60px;
+        }
+
+        .slider-wrapper {
+          margin-top: 32px;
+        }
+
+        .slider-track {
+          gap: 16px;
+          padding-bottom: 24px;
+        }
+
+        .slide-card {
+          flex: 0 0 min(420px, 82vw);
+        }
+
+        .slide-header {
+          padding: 16px 20px;
+        }
+
+        .slide-title {
+          font-size: 15px;
+        }
+
+        .slide-body {
+          padding: 20px;
+        }
+
+        .slide-col p {
+          font-size: 13px;
+        }
+
+        .slider-btn {
+          width: 38px;
+          height: 38px;
+        }
+      }
+      /* ====== POPUP ====== */
+      .popup-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.75);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        z-index: 10000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.4s ease;
+      }
+      .popup-overlay.active {
+        opacity: 1;
+        visibility: visible;
+      }
+      .popup-card {
+        position: relative;
+        background: linear-gradient(145deg, #13131f, #1a1a2e);
+        border: 1px solid rgba(99, 102, 241, 0.2);
+        border-radius: 24px;
+        padding: 40px 36px;
+        max-width: 440px;
+        width: 100%;
+        text-align: center;
+        transform: translateY(40px) scale(0.95);
+        transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        box-shadow: 0 24px 80px rgba(0, 0, 0, 0.5),
+          0 0 60px rgba(99, 102, 241, 0.08);
+      }
+      .popup-overlay.active .popup-card {
+        transform: translateY(0) scale(1);
+      }
+      .popup-close {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.05);
+        color: rgba(255, 255, 255, 0.5);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+      }
+      .popup-close:hover {
+        border-color: rgba(255, 255, 255, 0.3);
+        color: #fff;
+      }
+      .popup-emoji {
+        font-size: 48px;
+        margin-bottom: 16px;
+      }
+      .popup-badge {
+        display: inline-block;
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        color: #34d399;
+        background: rgba(52, 211, 153, 0.1);
+        border: 1px solid rgba(52, 211, 153, 0.2);
+        padding: 4px 14px;
+        border-radius: 20px;
+        margin-bottom: 16px;
+      }
+      .popup-title {
+        font-size: 21px;
+        font-weight: 800;
+        color: #fff;
+        line-height: 1.35;
+        margin: 0 0 12px;
+      }
+      .popup-title .gradient-text {
+        background: linear-gradient(135deg, var(--blue), var(--cyan));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .popup-text {
+        font-size: 14px;
+        line-height: 1.6;
+        color: rgba(255, 255, 255, 0.55);
+        margin: 0 0 24px;
+      }
+      .popup-steps {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-bottom: 28px;
+        text-align: left;
+      }
+      .popup-step {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 14px;
+        color: rgba(255, 255, 255, 0.8);
+      }
+      .popup-step-num {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: rgba(79, 142, 247, 0.15);
+        border: 1px solid rgba(79, 142, 247, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--blue);
+        flex-shrink: 0;
+      }
+      .popup-cta {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        width: 100%;
+        padding: 16px 24px;
+        background: linear-gradient(135deg, #2aabee, #229ed9);
+        color: #fff;
+        font-size: 16px;
+        font-weight: 700;
+        border-radius: 14px;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 20px rgba(42, 171, 238, 0.3);
+      }
+      .popup-cta:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 32px rgba(42, 171, 238, 0.4);
+      }
+      .popup-note {
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.3);
+        margin: 14px 0 0;
+      }
+      @media (max-width: 768px) {
+        .popup-card {
+          padding: 32px 24px;
+        }
+        .popup-emoji {
+          font-size: 40px;
+        }
+        .popup-title {
+          font-size: 18px;
+        }
+        .popup-text {
+          font-size: 13px;
+        }
+        .popup-step {
+          font-size: 13px;
+        }
+        .popup-cta {
+          font-size: 15px;
+          padding: 14px 20px;
+        }
+      }
       /* РЕШЕНИЕ */
       .solution {
         padding: 120px 0;
@@ -2128,125 +2513,192 @@
         </div>
       </div>
     </section>
-
-    <!-- РЕШЕНИЕ -->
-    <section class="solution">
+    <!-- ====== СРАВНЕНИЕ ====== -->
+    <section class="comparison" id="comparison">
       <div class="container">
-        <div class="solution-grid">
-          <div>
-            <div class="section-tag tag-green">
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <polyline points="20 6 9 17 4 12" />
-              </svg>
-              Решение
+        <div class="section-badge">Сравнение</div>
+        <h2 class="section-title">
+          Что изменится с <span class="gradient-text">НейроМенеджером</span>
+        </h2>
+        <p class="section-subtitle">Листайте карточки, чтобы увидеть разницу</p>
+      </div>
+
+      <div class="slider-wrapper">
+        <div class="slider-track">
+          <div class="slide-card">
+            <div class="slide-header">
+              <span class="slide-num">01</span>
+              <span class="slide-title">Общение с клиентом</span>
             </div>
-            <h2 class="section-title">Полноценный отдел продаж — без отдела</h2>
-            <p class="section-sub">
-              Внедряем ИИ-ассистента который общается неотличимо от живого
-              менеджера по недвижимости
-            </p>
+            <div class="slide-body">
+              <div class="slide-col slide-col--old">
+                <div class="slide-col-label">Обычный чат-бот</div>
+                <p>
+                  Кнопки и шаблоны. Клиент спрашивает про ипотеку на новостройку
+                  — бот отвечает «выберите из меню».
+                </p>
+              </div>
+              <div class="slide-divider"></div>
+              <div class="slide-col slide-col--new">
+                <div class="slide-col-label">НейроМенеджер</div>
+                <p>
+                  Ведёт живой диалог. Уточняет бюджет, район, сроки сдачи — и
+                  подбирает подходящие варианты как опытный риэлтор.
+                </p>
+              </div>
+            </div>
           </div>
-          <div class="solution-features">
-            <div class="feature-item">
-              <div class="feature-icon">
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
-                </svg>
-              </div>
-              <div class="feature-content">
-                <h4>Отвечает за 2 секунды</h4>
+
+          <div class="slide-card">
+            <div class="slide-header">
+              <span class="slide-num">02</span>
+              <span class="slide-title">Голосовые сообщения</span>
+            </div>
+            <div class="slide-body">
+              <div class="slide-col slide-col--old">
+                <div class="slide-col-label">Обычный чат-бот</div>
                 <p>
-                  В любое время дня и ночи. Без выходных. Без плохого
-                  настроения.
+                  Не понимает голосовые. Клиент записал сообщение на ходу — бот
+                  просит набрать текстом.
+                </p>
+              </div>
+              <div class="slide-divider"></div>
+              <div class="slide-col slide-col--new">
+                <div class="slide-col-label">НейроМенеджер</div>
+                <p>
+                  Распознаёт голос и отвечает мгновенно. Клиент надиктовал «хочу
+                  двушку у метро до 12 млн» — бот уже подбирает.
                 </p>
               </div>
             </div>
-            <div class="feature-item">
-              <div class="feature-icon">
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <path
-                    d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a7 7 0 0 1 7-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 0 1 2-2z"
-                  />
-                </svg>
-              </div>
-              <div class="feature-content">
-                <h4>Знает всё о вашем объекте</h4>
+          </div>
+
+          <div class="slide-card">
+            <div class="slide-header">
+              <span class="slide-num">03</span>
+              <span class="slide-title">Квалификация лида</span>
+            </div>
+            <div class="slide-body">
+              <div class="slide-col slide-col--old">
+                <div class="slide-col-label">Обычный чат-бот</div>
                 <p>
-                  Консультирует строго по вашей базе объектов — без выдуманных
-                  цен и условий.
+                  Собирает только имя и телефон. Менеджер тратит 15 минут на
+                  выяснение потребностей при звонке.
+                </p>
+              </div>
+              <div class="slide-divider"></div>
+              <div class="slide-col slide-col--new">
+                <div class="slide-col-label">НейроМенеджер</div>
+                <p>
+                  Выясняет бюджет, тип объекта, сроки, способ оплаты. Менеджер
+                  получает горячего квалифицированного клиента.
                 </p>
               </div>
             </div>
-            <div class="feature-item">
-              <div class="feature-icon">
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <circle cx="12" cy="12" r="10" />
-                  <polyline points="12 6 12 12 16 14" />
-                </svg>
-              </div>
-              <div class="feature-content">
-                <h4>Записывает на показ</h4>
+          </div>
+
+          <div class="slide-card">
+            <div class="slide-header">
+              <span class="slide-num">04</span>
+              <span class="slide-title">Сложные вопросы</span>
+            </div>
+            <div class="slide-body">
+              <div class="slide-col slide-col--old">
+                <div class="slide-col-label">Обычный чат-бот</div>
                 <p>
-                  Квалифицирует клиента, узнаёт бюджет и бронирует встречу в
-                  календарь.
+                  «Не понимаю ваш вопрос». Клиент спрашивает про рассрочку от
+                  застройщика — бот зависает.
+                </p>
+              </div>
+              <div class="slide-divider"></div>
+              <div class="slide-col slide-col--new">
+                <div class="slide-col-label">НейроМенеджер</div>
+                <p>
+                  Знает все условия, планировки, акции. Отвечает по существу и
+                  предлагает записаться на просмотр.
                 </p>
               </div>
             </div>
-            <div class="feature-item">
-              <div class="feature-icon">
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <rect x="3" y="3" width="18" height="18" rx="2" />
-                  <path d="M3 9h18M9 21V9" />
-                </svg>
-              </div>
-              <div class="feature-content">
-                <h4>Фиксирует всех лидов</h4>
+          </div>
+
+          <div class="slide-card">
+            <div class="slide-header">
+              <span class="slide-num">05</span>
+              <span class="slide-title">Вечер и выходные</span>
+            </div>
+            <div class="slide-body">
+              <div class="slide-col slide-col--old">
+                <div class="slide-col-label">Обычный чат-бот</div>
                 <p>
-                  Автоматически записывает данные в Google Sheets и уведомляет
-                  вас.
+                  «Оставьте заявку, перезвоним в понедельник». Клиент уходит к
+                  конкуренту, который ответил сразу.
+                </p>
+              </div>
+              <div class="slide-divider"></div>
+              <div class="slide-col slide-col--new">
+                <div class="slide-col-label">НейроМенеджер</div>
+                <p>
+                  Работает 24/7. Воскресенье, 23:00 — клиент получает полную
+                  консультацию и записывается на просмотр.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="slide-card">
+            <div class="slide-header">
+              <span class="slide-num">06</span>
+              <span class="slide-title">Конверсия в сделку</span>
+            </div>
+            <div class="slide-body">
+              <div class="slide-col slide-col--old">
+                <div class="slide-col-label">Обычный чат-бот</div>
+                <p>
+                  Просто собирает контакт. Не продаёт, не подогревает, не
+                  доводит до встречи.
+                </p>
+              </div>
+              <div class="slide-divider"></div>
+              <div class="slide-col slide-col--new">
+                <div class="slide-col-label">НейроМенеджер</div>
+                <p>
+                  Презентует объект, снимает возражения, назначает просмотр.
+                  Менеджер получает клиента, готового к сделке.
                 </p>
               </div>
             </div>
           </div>
         </div>
+
+        <div class="slider-nav">
+          <button class="slider-btn slider-btn--prev" aria-label="Назад">
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M15 18l-6-6 6-6" />
+            </svg>
+          </button>
+          <div class="slider-dots"></div>
+          <button class="slider-btn slider-btn--next" aria-label="Вперёд">
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M9 18l6-6-6-6" />
+            </svg>
+          </button>
+        </div>
       </div>
     </section>
-
     <!-- КАК РАБОТАЕТ -->
     <section class="how">
       <div class="container">
@@ -3109,7 +3561,57 @@
         </div>
       </div>
     </section>
-
+    <!-- ====== POPUP ====== -->
+    <div class="popup-overlay" id="leadPopup">
+      <div class="popup-card">
+        <button class="popup-close" id="popupClose" aria-label="Закрыть">
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path d="M18 6L6 18M6 6l12 12" />
+          </svg>
+        </button>
+        <div class="popup-emoji">🤖</div>
+        <div class="popup-badge">Бесплатный тест-драйв</div>
+        <h3 class="popup-title">
+          Хотите увидеть, как НейроМенеджер будет работать в
+          <span class="gradient-text">вашем бизнесе</span>?
+        </h3>
+        <p class="popup-text">
+          Отправьте информацию о вашей компании — услуги, объекты, частые
+          вопросы клиентов. Через пару часов мы соберём демо-бота, который знает
+          ваш бизнес. Пообщайтесь с ним как настоящий клиент.
+        </p>
+        <div class="popup-steps">
+          <div class="popup-step">
+            <span class="popup-step-num">1</span>
+            <span>Напишите в Telegram и скиньте данные о компании</span>
+          </div>
+          <div class="popup-step">
+            <span class="popup-step-num">2</span>
+            <span>Через 2 часа получите персонального демо-бота</span>
+          </div>
+          <div class="popup-step">
+            <span class="popup-step-num">3</span>
+            <span>Задайте ему вопросы как ваш клиент — и оцените</span>
+          </div>
+        </div>
+        <a href="https://t.me/arinashrr" target="_blank" class="popup-cta">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0h-.056zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"
+            />
+          </svg>
+          Написать в Telegram
+        </a>
+        <p class="popup-note">Без оплаты и обязательств. Просто попробуйте.</p>
+      </div>
+    </div>
     <!-- ФУТЕР -->
     <footer>
       <div class="footer-logo">
@@ -3374,6 +3876,114 @@
           ctaBtn.style.background = "linear-gradient(135deg, #4f8ef7, #7c3aed)";
         });
       }
+
+      // ===== SLIDER =====
+      (function () {
+        var track = document.querySelector(".slider-track");
+        var dotsContainer = document.querySelector(".slider-dots");
+        var cards = document.querySelectorAll(".slide-card");
+        var prevBtn = document.querySelector(".slider-btn--prev");
+        var nextBtn = document.querySelector(".slider-btn--next");
+
+        if (!track || !cards.length) return;
+
+        for (var i = 0; i < cards.length; i++) {
+          var dot = document.createElement("button");
+          dot.classList.add("slider-dot");
+          if (i === 0) dot.classList.add("active");
+          (function (index) {
+            dot.addEventListener("click", function () {
+              scrollToCard(index);
+            });
+          })(i);
+          dotsContainer.appendChild(dot);
+        }
+
+        var dots = document.querySelectorAll(".slider-dot");
+
+        function scrollToCard(index) {
+          var card = cards[index];
+          if (!card) return;
+          var trackRect = track.getBoundingClientRect();
+          var cardRect = card.getBoundingClientRect();
+          var scrollLeft =
+            track.scrollLeft +
+            cardRect.left -
+            trackRect.left -
+            (trackRect.width - cardRect.width) / 2;
+          track.scrollTo({ left: scrollLeft, behavior: "smooth" });
+        }
+
+        function updateDots() {
+          var trackRect = track.getBoundingClientRect();
+          var center = trackRect.left + trackRect.width / 2;
+          var closestIndex = 0;
+          var closestDist = Infinity;
+
+          for (var i = 0; i < cards.length; i++) {
+            var cardRect = cards[i].getBoundingClientRect();
+            var cardCenter = cardRect.left + cardRect.width / 2;
+            var dist = Math.abs(center - cardCenter);
+            if (dist < closestDist) {
+              closestDist = dist;
+              closestIndex = i;
+            }
+          }
+
+          for (var j = 0; j < dots.length; j++) {
+            if (j === closestIndex) {
+              dots[j].classList.add("active");
+            } else {
+              dots[j].classList.remove("active");
+            }
+          }
+
+          return closestIndex;
+        }
+
+        track.addEventListener("scroll", updateDots);
+
+        prevBtn.addEventListener("click", function () {
+          var current = updateDots();
+          if (current > 0) scrollToCard(current - 1);
+        });
+
+        nextBtn.addEventListener("click", function () {
+          var current = updateDots();
+          if (current < cards.length - 1) scrollToCard(current + 1);
+        });
+      })();
+
+      // ===== POPUP 20 сек =====
+      (function () {
+        var popup = document.getElementById("leadPopup");
+        var closeBtn = document.getElementById("popupClose");
+        if (!popup || !closeBtn) return;
+
+        setTimeout(function () {
+          if (sessionStorage.getItem("popupClosed")) return;
+          popup.classList.add("active");
+        }, 10000);
+
+        closeBtn.addEventListener("click", function () {
+          popup.classList.remove("active");
+          sessionStorage.setItem("popupClosed", "true");
+        });
+
+        popup.addEventListener("click", function (e) {
+          if (e.target === popup) {
+            popup.classList.remove("active");
+            sessionStorage.setItem("popupClosed", "true");
+          }
+        });
+
+        document.addEventListener("keydown", function (e) {
+          if (e.key === "Escape" && popup.classList.contains("active")) {
+            popup.classList.remove("active");
+            sessionStorage.setItem("popupClosed", "true");
+          }
+        });
+      })();
     </script>
   </body>
 </html>
