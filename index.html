@@ -890,19 +890,52 @@
         color: white;
         font-weight: 700;
       }
-
+      /* СТИЛИ ДЛЯ БЛОКА ПОД КАЛЬКУЛЯТОРОМ */
+      .calc-time-note {
+        display: flex;
+        gap: 20px;
+        align-items: flex-start;
+        margin-top: 40px;
+        padding: 28px 32px;
+        background: rgba(16, 185, 129, 0.08);
+        border: 1px solid rgba(16, 185, 129, 0.25);
+        border-radius: 16px;
+      }
+      .calc-time-icon {
+        font-size: 32px;
+        flex-shrink: 0;
+        line-height: 1;
+      }
+      .calc-time-content {
+        flex: 1;
+      }
+      .calc-time-title {
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--green);
+        margin-bottom: 8px;
+      }
+      .calc-time-text {
+        font-size: 15px;
+        color: var(--text-muted);
+        line-height: 1.6;
+        margin: 0;
+      }
+      .calc-time-text strong {
+        color: var(--text);
+      }
       /* PRICING (ДОБАВЛЕННЫЕ И ИСПРАВЛЕННЫЕ СТИЛИ) */
       .pricing {
         padding: 100px 0;
       }
-      
+
       .pricing-top-grid {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
         gap: 30px;
         margin-top: 50px;
       }
-      
+
       .ptariff-card {
         background: var(--card-bg);
         border: 1px solid var(--card-border);
@@ -911,7 +944,7 @@
         position: relative;
         transition: all 0.3s ease;
       }
-      
+
       .ptariff-card:hover {
         transform: translateY(-5px);
         border-color: rgba(79, 142, 247, 0.3);
@@ -920,9 +953,10 @@
       .ptariff-card-popular {
         border-color: rgba(79, 142, 247, 0.4);
         background: rgba(79, 142, 247, 0.03);
-        box-shadow: 0 20px 40px rgba(0,0,0,0.2), 0 0 40px rgba(79, 142, 247, 0.05);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2),
+          0 0 40px rgba(79, 142, 247, 0.05);
       }
-      
+
       .ptariff-card-popular:hover {
         border-color: rgba(79, 142, 247, 0.7);
       }
@@ -964,8 +998,9 @@
         min-height: 42px;
       }
 
-      .ptariff-price-block, .ptariff-monthly-block {
-        background: rgba(0,0,0,0.2);
+      .ptariff-price-block,
+      .ptariff-monthly-block {
+        background: rgba(0, 0, 0, 0.2);
         border-radius: 16px;
         padding: 20px;
         margin-bottom: 16px;
@@ -1012,7 +1047,7 @@
         margin-bottom: 8px;
         font-size: 14px;
       }
-      
+
       .ptariff-monthly-val {
         font-weight: 700;
       }
@@ -1046,10 +1081,19 @@
       .ptariff-check {
         font-weight: bold;
       }
-      .ptariff-check.green { color: var(--green); }
-      .ptariff-check.blue { color: var(--blue); }
-      .ptariff-check.gold { color: var(--gold); }
-      .ptariff-check.muted { color: var(--text-muted); opacity: 0.5; }
+      .ptariff-check.green {
+        color: var(--green);
+      }
+      .ptariff-check.blue {
+        color: var(--blue);
+      }
+      .ptariff-check.gold {
+        color: var(--gold);
+      }
+      .ptariff-check.muted {
+        color: var(--text-muted);
+        opacity: 0.5;
+      }
 
       .ptariff-btn {
         display: flex;
@@ -1071,7 +1115,7 @@
       }
       .ptariff-btn-outline:hover {
         border-color: var(--text);
-        background: rgba(255,255,255,0.05);
+        background: rgba(255, 255, 255, 0.05);
       }
 
       .ptariff-btn-primary {
@@ -1131,7 +1175,7 @@
       }
 
       .ptariff-detail-card:hover {
-        border-color: rgba(255,255,255,0.2);
+        border-color: rgba(255, 255, 255, 0.2);
         transform: translateY(-4px);
       }
 
@@ -1209,7 +1253,7 @@
       }
 
       .ptariff-detail-monthly {
-        background: rgba(0,0,0,0.2);
+        background: rgba(0, 0, 0, 0.2);
         padding: 14px;
         border-radius: 12px;
         text-align: center;
@@ -1607,7 +1651,7 @@
         .why-cards,
         .partner-grid,
         .magic-steps,
-        .pricing-top-grid, 
+        .pricing-top-grid,
         .ptariff-detail-grid {
           grid-template-columns: 1fr;
           gap: 16px;
@@ -2207,37 +2251,81 @@
     <section class="roi-calc" id="calculator">
       <div class="container">
         <div class="section-tag tag-green">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
             <line x1="12" y1="1" x2="12" y2="23"></line>
             <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
           </svg>
           Калькулятор выгоды
         </div>
         <h2 class="section-title">Узнайте, сколько вы теряете</h2>
-        <p class="section-sub">Посчитайте дополнительную прибыль за год от внедрения AI</p>
-        
+        <p class="section-sub">
+          Посчитайте дополнительную прибыль за год от внедрения AI
+        </p>
+
         <div class="calc-wrapper">
           <div class="calc-controls">
             <div class="calc-group">
-              <label>Зарплата менеджера (₽/мес): <span id="salaryVal" class="calc-val">60 000</span> ₽</label>
-              <input type="range" id="salary" min="30000" max="150000" step="5000" value="60000">
+              <label
+                >Зарплата менеджера (₽/мес):
+                <span id="salaryVal" class="calc-val">60 000</span> ₽</label
+              >
+              <input
+                type="range"
+                id="salary"
+                min="30000"
+                max="150000"
+                step="5000"
+                value="60000"
+              />
             </div>
             <div class="calc-group">
-              <label>Количество лидов в месяц: <span id="leadsVal" class="calc-val">100</span></label>
-              <input type="range" id="leads" min="30" max="500" step="10" value="100">
+              <label
+                >Количество лидов в месяц:
+                <span id="leadsVal" class="calc-val">100</span></label
+              >
+              <input
+                type="range"
+                id="leads"
+                min="30"
+                max="500"
+                step="10"
+                value="100"
+              />
             </div>
             <div class="calc-group">
-              <label>Ваша комиссия со сделки (₽): <span id="profitVal" class="calc-val">150 000</span> ₽</label>
-              <input type="range" id="profit" min="50000" max="500000" step="10000" value="150000">
+              <label
+                >Ваша комиссия со сделки (₽):
+                <span id="profitVal" class="calc-val">150 000</span> ₽</label
+              >
+              <input
+                type="range"
+                id="profit"
+                min="50000"
+                max="500000"
+                step="10000"
+                value="150000"
+              />
             </div>
           </div>
-          
+
           <div class="calc-result">
             <div class="result-label">Ваша выгода за 1 год</div>
             <div class="result-num" id="totalSaved">1.2 млн ₽</div>
             <div class="result-breakdown">
-              <div>Экономия на зарплате: <span id="savedSalary">720 000</span> ₽</div>
-              <div>Выручка со спасенных лидов: <span id="savedRevenue">540 000</span> ₽</div>
+              <div>
+                Экономия на зарплате: <span id="savedSalary">720 000</span> ₽
+              </div>
+              <div>
+                Выручка со спасенных лидов:
+                <span id="savedRevenue">540 000</span> ₽
+              </div>
             </div>
           </div>
         </div>
@@ -2247,7 +2335,10 @@
           <div class="calc-time-content">
             <div class="calc-time-title">Откуда берутся спасенные лиды?</div>
             <p class="calc-time-text">
-              В среднем <strong>20% лидов</strong> теряются из-за ответа дольше 10 минут, выходных или ночного времени. Бот отвечает за 2 секунды круглосуточно. При конверсии в сделку всего 3% — это ваш недополученный доход, который бот возвращает.
+              В среднем <strong>20% лидов</strong> теряются из-за ответа дольше
+              10 минут, выходных или ночного времени. Бот отвечает за 2 секунды
+              круглосуточно. При конверсии в сделку всего 3% — это ваш
+              недополученный доход, который бот возвращает.
             </p>
           </div>
         </div>
@@ -2576,7 +2667,7 @@
                     class="ptariff-detail-price"
                     style="color: var(--gold); font-size: 22px"
                   >
-                    Цена уточняется по запросу
+                    По запросу
                   </div>
                 </div>
               </div>
@@ -2795,7 +2886,7 @@
               </div>
             </div>
             <div class="faq-a">
-              5-7 рабочих дней. Вы сдаёте информацию о базе и задачах — мы
+              2–5 рабочих дней. Вы сдаёте информацию о базе и задачах — мы
               настраиваем, тестируем и сдаём готового бота. Вам ничего
               настраивать не нужно.
             </div>
@@ -2895,7 +2986,7 @@
           </div>
           <h2 class="cta-title">Попробуйте прямо сейчас</h2>
           <p class="cta-sub">
-            Напишите мне в Telegram слово <b>«ДЕМО»</b> — и за 30 секунд увидите,<br />
+            Напишите в Telegram слово <b>«ДЕМО»</b> — и за 30 секунд увидите,<br />
             как бот отвечает вашим клиентам. Без оплаты и обязательств.
           </p>
           <a
@@ -2958,7 +3049,7 @@
         AI-Менеджер PRO
       </div>
       <div class="footer-text">© 2025 Автоматизация недвижимости</div>
-      <div class="footer-text">Инте6рация AI в продажи</div>
+      <div class="footer-text">Интеграция AI в продажи</div>
     </footer>
 
     <script>
@@ -3120,40 +3211,44 @@
         const salaryEl = document.getElementById("salary");
         const leadsEl = document.getElementById("leads");
         const profitEl = document.getElementById("profit");
-        
+
         // Защита от ошибок, если вдруг элементов нет
-        if(!salaryEl || !leadsEl || !profitEl) return;
+        if (!salaryEl || !leadsEl || !profitEl) return;
 
         const salary = parseInt(salaryEl.value);
         const leads = parseInt(leadsEl.value);
         const profit = parseInt(profitEl.value);
-        
-        document.getElementById("salaryVal").innerText = salary.toLocaleString();
+
+        document.getElementById("salaryVal").innerText =
+          salary.toLocaleString();
         document.getElementById("leadsVal").innerText = leads;
-        document.getElementById("profitVal").innerText = profit.toLocaleString();
-        
+        document.getElementById("profitVal").innerText =
+          profit.toLocaleString();
+
         const savedSalary = salary * 12;
         const savedRevenue = Math.round(leads * 0.2 * 0.03 * 12 * profit);
         const total = savedSalary + savedRevenue;
-        
-        document.getElementById("savedSalary").innerText = savedSalary.toLocaleString();
-        document.getElementById("savedRevenue").innerText = savedRevenue.toLocaleString();
-        
+
+        document.getElementById("savedSalary").innerText =
+          savedSalary.toLocaleString();
+        document.getElementById("savedRevenue").innerText =
+          savedRevenue.toLocaleString();
+
         const totalEl = document.getElementById("totalSaved");
         totalEl.innerText =
           total >= 1000000
             ? (total / 1000000).toFixed(1) + " млн ₽"
             : Math.round(total / 1000) + " тыс ₽";
-            
+
         totalEl.style.transform = "scale(1.1)";
         setTimeout(() => {
           totalEl.style.transform = "scale(1)";
         }, 200);
-        
+
         const stickyEl = document.getElementById("stickyProfit");
         if (stickyEl) stickyEl.innerText = totalEl.innerText;
       }
-      
+
       document.getElementById("salary")?.addEventListener("input", calcROI);
       document.getElementById("leads")?.addEventListener("input", calcROI);
       document.getElementById("profit")?.addEventListener("input", calcROI);
